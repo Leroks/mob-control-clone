@@ -54,7 +54,7 @@ public class ProjectileBehavior : MonoBehaviour
             Instantiate(explosionEffect, transform.position, Quaternion.identity);
         }
         
-        ReturnToPool();
+        //ReturnToPool();
     }
     
     private void ReturnToPool()
