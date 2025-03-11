@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using TMPro;
 
 
 public class Door : MonoBehaviour
@@ -10,25 +11,25 @@ public class Door : MonoBehaviour
     [SerializeField] int amount;
     [SerializeField] GameObject player;
     [SerializeField] float time;
-    [SerializeField] Vector2 xMove;
+    [SerializeField] float moveAmountX;
     [SerializeField] bool isMoving;
+    [SerializeField] TextMeshProUGUI multiplierText;
 
     void Start()
     {
         if (isMoving) 
         {
-            DoMoveRight();
+            DoMoveHorizontalLoop();
         }
-            
+        
+        multiplierText.text = "X"+ amount.ToString();
     }
-    private void DoMoveLeft()
+
+    private void DoMoveHorizontalLoop()
     {
-        transform.DOMoveX(xMove.x, time).OnComplete((DoMoveRight));
+        transform.DOMoveX(transform.position.x + moveAmountX, time).SetLoops(-1, LoopType.Yoyo);
     }
-    private void DoMoveRight()
-    {
-        transform.DOMoveX(xMove.y, time).OnComplete((DoMoveLeft));
-    }
+    
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Player"))
