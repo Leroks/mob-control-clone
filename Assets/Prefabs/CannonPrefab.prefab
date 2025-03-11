@@ -46,10 +46,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb00f2517c5654623a241375be6fd145, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 30
-  projectileSpeed: 15
-  fireRate: 1
-  projectilePrefab: {fileID: 2018887611902383711, guid: 11562246ad3fe434194d90e1a8637693, type: 3}
+  moveSpeed: 10
+  projectileSpeed: 7
+  fireRate: 0.2
   firePoint: {fileID: 1737231683180641293}
   crowdReductionAmount: 5
   explosionRadius: 2
