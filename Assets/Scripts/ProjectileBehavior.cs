@@ -44,11 +44,7 @@ public class ProjectileBehavior : MonoBehaviour
         {
             if (hitCollider.CompareTag("Player"))
             {
-                PlayerController player = hitCollider.GetComponent<PlayerController>();
-                if (player != null)
-                {
-                    player.RemoveFromCrowd(damageAmount);
-                }
+                
             }
         }
         
