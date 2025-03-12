@@ -47,7 +47,7 @@ public class Door : MonoBehaviour
 
                     ProjectileBehavior projectile = ProjectilePool.Instance.GetProjectile();
                     projectile.transform.position = newSpawnPoint;
-                    projectile.Initialize(1, 2f, null, 5f);
+                    projectile.Initialize(5f);
                 }
             
         }

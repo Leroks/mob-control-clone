@@ -3,38 +3,27 @@ using UnityEngine;
 
 public class ProjectileBehavior : MonoBehaviour
 {
-    private int damageAmount;
-    private float explosionRadius;
-    private GameObject explosionEffect;
     private float moveSpeed;
     private float lifetime = 12f;
     private float currentLifetime;
-
-    // Properties for teleportation
-    public int CrowdReductionAmount => damageAmount;
-    public float ExplosionRadius => explosionRadius;
-    public GameObject ExplosionEffectPrefab => explosionEffect;
 
     public Vector3 GetVelocity()
     {
         return transform.forward * moveSpeed;
     }
     
-    public void Initialize(int damage, float radius, GameObject effectPrefab, float speed)
+    public void Initialize(float speed)
     {
-        damageAmount = damage;
-        explosionRadius = radius;
-        explosionEffect = effectPrefab;
         moveSpeed = speed;
         currentLifetime = lifetime;
     }
-    
-    void OnEnable()
+
+    private void OnEnable()
     {
         currentLifetime = lifetime;
     }
-    
-    void Update()
+
+    private void Update()
     {
         // Continuous forward movement
         transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime);
@@ -46,11 +35,9 @@ public class ProjectileBehavior : MonoBehaviour
             ReturnToPool();
         }
     }
-    
-    void OnTriggerEnter(Collider other)
+
+    private void OnTriggerEnter(Collider other)
     {
-        bool shouldExplode = false;
-        
         // Handle collision with enemies
         if (other.CompareTag("Enemy"))
         {
@@ -60,24 +47,13 @@ public class ProjectileBehavior : MonoBehaviour
                 enemy.TakeDamage();
                 DestroyProjectile();
             }
-            shouldExplode = true;
         }
         
         // Handle collision with enemy castle
         if (other.CompareTag("EnemyCastle"))
         {
             other.GetComponent<EnemyCastle>().GetHit(1);
-            shouldExplode = true;
             ReturnToPool();
-        }
-        
-        if (shouldExplode)
-        {
-            // Spawn explosion effect
-            if (explosionEffect != null)
-            {
-                Instantiate(explosionEffect, transform.position, Quaternion.identity);
-            }
         }
     }
     
@@ -89,12 +65,6 @@ public class ProjectileBehavior : MonoBehaviour
         transform.DOScale(Vector3.zero, 0.2f).SetEase(Ease.InBack).OnComplete(() => {
             ReturnToPool();
         });
-        
-        // Spawn explosion effect immediately
-        if (explosionEffect != null)
-        {
-            Instantiate(explosionEffect, transform.position, Quaternion.identity);
-        }
     }
     
     private void ReturnToPool()

@@ -18,7 +18,7 @@ public class EnemyBehavior : MonoBehaviour
         moveSpeed = speed;
         targetPosition = target;
         isActive = true;
-        health = (transform.localScale.x > 1.5f) ? 3 : 1; // Big enemies have more health
+        health = 1;
         originalScale = transform.localScale;
         
         // Play spawn animation
@@ -38,30 +38,6 @@ public class EnemyBehavior : MonoBehaviour
         {
             //ReturnToPool();
         }
-    }
-    
-    void OnTriggerEnter(Collider other)
-    {
-        // if (!isActive) return;
-        //
-        // if (other.CompareTag("Player"))
-        // {
-        //     // Handle collision with player (projectile)
-        //     isActive = false;
-        //     
-        //     // Get reference to the projectile
-        //     ProjectileBehavior projectile = other.GetComponent<ProjectileBehavior>();
-        //     if (projectile != null)
-        //     {
-        //         // Tell the projectile to destroy itself
-        //         projectile.DestroyProjectile();
-        //     }
-        //     
-        //     // Play death animation and return to pool
-        //     transform.DOScale(Vector3.zero, 0.2f).SetEase(Ease.InBack).OnComplete(() => {
-        //         ReturnToPool();
-        //     });
-        // }
     }
     
     // Called by projectiles when hit

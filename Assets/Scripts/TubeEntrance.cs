@@ -1,9 +1,11 @@
 using UnityEngine;
+using System.Collections;
 
 public class TubeEntrance : MonoBehaviour
 {
     [Header("Teleport Settings")]
     [SerializeField] private TubeExit targetExit;
+    [SerializeField] private float teleportDelay = 1.0f;
     
     [Header("Visual Effects")]
     [SerializeField] private ParticleSystem entranceEffect;
@@ -35,28 +37,36 @@ public class TubeEntrance : MonoBehaviour
                 {
                     Instantiate(entranceEffect, other.transform.position, Quaternion.identity);
                 }
-
+                
+                float yPosition = other.transform.position.y;
+                
                 // Return to pool
                 ProjectilePool.Instance.ReturnProjectile(projectile);
                 
-                // Spawn at exit
-                ProjectileBehavior newProjectile = ProjectilePool.Instance.GetProjectile();
-                if (newProjectile != null)
-                {
-                    // Keep the same Y position, only change X and Z
-                    Vector3 exitPos = targetExit.transform.position;
-                    exitPos.y = other.transform.position.y;
-                    newProjectile.transform.position = exitPos;
-                    newProjectile.transform.forward = -targetExit.transform.up;
-                    newProjectile.Initialize(projectile.CrowdReductionAmount, 
-                                          projectile.ExplosionRadius, 
-                                          projectile.ExplosionEffectPrefab, 
-                                          speed);
-                    
-                    // Tell exit to play effects
-                    targetExit.PlayExitEffects();
-                }
+                // Start the delayed spawn coroutine
+                StartCoroutine(DelayedSpawn(speed, yPosition));
             }
         }
-}
+    }
+    
+    private IEnumerator DelayedSpawn(float speed, float yPosition)
+    {
+        // Wait for the delay
+        yield return new WaitForSeconds(teleportDelay);
+        
+        // Spawn at exit
+        ProjectileBehavior newProjectile = ProjectilePool.Instance.GetProjectile();
+        if (newProjectile != null)
+        {
+            // Keep the same Y position, only change X and Z
+            Vector3 exitPos = targetExit.transform.position;
+            exitPos.y = yPosition;
+            newProjectile.transform.position = exitPos;
+            newProjectile.transform.forward = -targetExit.transform.up;
+            newProjectile.Initialize(speed);
+            
+            // Tell exit to play effects
+            targetExit.PlayExitEffects();
+        }
+    }
 }

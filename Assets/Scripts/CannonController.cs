@@ -76,7 +76,7 @@ public class CannonController : MonoBehaviour
         {
             projectile.transform.position = firePoint.position;
             projectile.transform.rotation = Quaternion.identity;
-            projectile.Initialize(crowdReductionAmount, explosionRadius, explosionEffectPrefab, projectileSpeed);
+            projectile.Initialize(projectileSpeed);
             
             wobbleEffect.PlayWobbleAnimation();
         }
