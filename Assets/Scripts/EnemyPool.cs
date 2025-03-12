@@ -58,6 +58,7 @@ public class EnemyPool : MonoBehaviour
         }
         
         EnemyBehavior enemy = pool.Dequeue();
+        enemy.transform.localScale = Vector3.one; // Reset scale for normal enemies (will be adjusted for big enemies in Initialize)
         enemy.GetComponent<CapsuleCollider>().enabled = true;
         activeEnemies.Add(enemy);
         enemy.gameObject.SetActive(true);
