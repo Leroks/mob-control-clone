@@ -50,7 +50,7 @@ public class ProjectileBehavior : MonoBehaviour
         
         if (other.CompareTag("EnemyCastle"))
         {
-            other.GetComponent<EnemyCastleScript>().GetHit(1);
+            other.GetComponent<EnemyCastle>().GetHit(1);
         }
         
         

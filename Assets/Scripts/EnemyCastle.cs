@@ -4,7 +4,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.Serialization;
 
-public class EnemyCastleScript : MonoBehaviour
+public class EnemyCastle : MonoBehaviour
 {
     [SerializeField] private ParticleSystem castleParticular;
     [SerializeField] private TextMeshProUGUI healthText;
