@@ -454,7 +454,7 @@ Transform:
   m_GameObject: {fileID: 6224711495860427658}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.467, z: -0.759}
+  m_LocalPosition: {x: 0, y: -0.63, z: -0.49}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -701,7 +701,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -10.7, y: 4.4, z: 67.2}
-  m_LocalScale: {x: 5, y: 3.9999998, z: 5}
+  m_LocalScale: {x: 4, y: 3.1999998, z: 4}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 6224711497373687843}
@@ -798,12 +798,18 @@ MonoBehaviour:
   healthText: {fileID: 6224711496733761097}
   health: 30
   spawnPoint: {fileID: 6224711495860427659}
-  enemy: {fileID: 227760923134555807, guid: 9784bd7e98dcb4415819c975263a8248, type: 3}
-  bigEnemy: {fileID: 227760923134555807, guid: c240fec4d063d496e8a174f499339e6f, type: 3}
+  normalEnemySpeed: 5
+  bigEnemySpeed: 3
+  spawnSpreadX: 2
+  spawnSpreadZ: 3
   spawnEvents:
-  - {x: 2, y: 8, z: 0}
-  - {x: 10, y: 12, z: 0}
-  - {x: 5, y: 6, z: 0}
+  - {x: 2, y: 50, z: 0}
+  - {x: 10, y: 30, z: 0}
+  - {x: 5, y: 20, z: 0}
+  spawnEffectDuration: 0.3
+  spawnEffectStrength: 1.2
+  spawnEffectVibrato: 4
+  spawnEffectElasticity: 1
 --- !u!65 &6224711496802093026
 BoxCollider:
   m_ObjectHideFlags: 0
