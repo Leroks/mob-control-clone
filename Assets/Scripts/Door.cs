@@ -3,31 +3,31 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using TMPro;
+using UnityEngine.Serialization;
 
 
 public class Door : MonoBehaviour
 {
-    // Start is called before the first frame update
-    [SerializeField] int amount;
-    [SerializeField] GameObject player;
-    [SerializeField] float time;
-    [SerializeField] float moveAmountX;
-    [SerializeField] bool isMoving;
-    [SerializeField] TextMeshProUGUI multiplierText;
+    [SerializeField] private int multiplierAmount = 3;
+    [SerializeField] private GameObject player;
+    [SerializeField] private float timeToMove = 3f;
+    [SerializeField] private float moveAmountX;
+    [SerializeField] private bool isMoving;
+    [SerializeField] private TextMeshProUGUI multiplierText;
 
-    void Start()
+    private void Start()
     {
         if (isMoving) 
         {
             DoMoveHorizontalLoop();
         }
         
-        multiplierText.text = "X"+ amount.ToString();
+        multiplierText.text = "X"+ multiplierAmount.ToString();
     }
 
     private void DoMoveHorizontalLoop()
     {
-        transform.DOMoveX(transform.position.x + moveAmountX, time).SetLoops(-1, LoopType.Yoyo);
+        transform.DOMoveX(transform.position.x + moveAmountX, timeToMove).SetLoops(-1, LoopType.Yoyo);
     }
     
     private void OnTriggerEnter(Collider other)
@@ -37,7 +37,7 @@ public class Door : MonoBehaviour
             Debug.Log("Player entered the door");
             GameObject player = other.gameObject;
             
-                for(int i = 0; i < amount-1; i++)
+                for(int i = 0; i < multiplierAmount-1; i++)
                 {
                     Vector3 newSpawnPoint = player.transform.position;
                     float spawnX = Random.Range(-1, 1);
