@@ -9,11 +9,6 @@ public class CannonController : MonoBehaviour
     public float fireRate = 0.1f;
     public Transform firePoint;
     
-    [Header("Impact Settings")]
-    public int crowdReductionAmount = 5;
-    public float explosionRadius = 2f;
-    public GameObject explosionEffectPrefab;
-    
     private float nextFireTime;
     private bool isMouseHeld;
     private Camera mainCamera;
