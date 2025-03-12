@@ -6,7 +6,7 @@ public class ProjectileBehavior : MonoBehaviour
     private float explosionRadius;
     private GameObject explosionEffect;
     private float moveSpeed;
-    private float lifetime = 5f;
+    private float lifetime = 12f;
     private float currentLifetime;
     
     public void Initialize(int damage, float radius, GameObject effectPrefab, float speed)
@@ -47,6 +47,12 @@ public class ProjectileBehavior : MonoBehaviour
                 
             }
         }
+        
+        if (other.CompareTag("EnemyCastle"))
+        {
+            other.GetComponent<EnemyCastleScript>().GetHit(1);
+        }
+        
         
         // Spawn explosion effect
         if (explosionEffect != null)
