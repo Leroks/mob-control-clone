@@ -54,6 +54,8 @@ MonoBehaviour:
   crowdReductionAmount: 5
   explosionRadius: 2
   explosionEffectPrefab: {fileID: 0}
+  minX: -3.5
+  maxX: 3.5
 --- !u!114 &1642098294174426450
 MonoBehaviour:
   m_ObjectHideFlags: 0

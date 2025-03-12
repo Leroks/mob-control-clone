@@ -51,14 +51,21 @@ public class CannonController : MonoBehaviour
         }
     }
 
+    [Header("Movement Bounds")]
+    [SerializeField] private float minX = -3.5f;
+    [SerializeField] private float maxX = 3.5f;
+    
     private void FollowMouseX()
     {
         Vector3 mousePos = Input.mousePosition;
         mousePos.z = mainCamera.WorldToScreenPoint(transform.position).z;
         Vector3 worldPos = mainCamera.ScreenToWorldPoint(mousePos);
         
+        // Clamp the x position to the bounds
         Vector3 newPosition = transform.position;
         newPosition.x = Mathf.Lerp(newPosition.x, worldPos.x, moveSpeed * Time.deltaTime);
+        newPosition.x = Mathf.Clamp(newPosition.x, minX, maxX);
+        
         transform.position = newPosition;
     }
 
