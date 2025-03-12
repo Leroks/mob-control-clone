@@ -4,7 +4,7 @@ using DG.Tweening;
 public class CannonController : MonoBehaviour
 {
     [Header("Cannon Settings")]
-    public float moveSpeed = 10f;
+    public float moveSpeed = 5f;
     public float projectileSpeed = 15f;
     public float fireRate = 0.1f;
     public Transform firePoint;

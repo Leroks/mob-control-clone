@@ -40,7 +40,7 @@ public class Door : MonoBehaviour
                 for(int i = 0; i < multiplierAmount-1; i++)
                 {
                     Vector3 newSpawnPoint = player.transform.position;
-                    float spawnX = Random.Range(-1, 1);
+                    float spawnX = Random.Range(-0.9f, 0.9f);
                     float spawnZ = Random.Range(1, 2);
                     newSpawnPoint.x += spawnX;
                     newSpawnPoint.z += spawnZ;
