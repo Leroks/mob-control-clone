@@ -1,76 +1,126 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using UnityEngine.Serialization;
+using DG.Tweening;
 
 public class EnemyCastle : MonoBehaviour
 {
+    [Header("Castle Settings")]
     [SerializeField] private ParticleSystem castleParticular;
     [SerializeField] private TextMeshProUGUI healthText;
     [SerializeField] private int health = 100;
-
+    
+    [Header("Spawn Settings")]
     [SerializeField] private Transform spawnPoint;
-    [SerializeField] private GameObject enemy;
-    [SerializeField] private GameObject bigEnemy;
-
-    [Header("Spawn:Time-EnemyAmount-BigEnemyAmount")]
-    [SerializeField]
-    private Vector3[] spawnEvents;
+    [SerializeField] private float normalEnemySpeed = 5f;
+    [SerializeField] private float bigEnemySpeed = 3f;
+    [SerializeField] private float spawnSpreadX = 2f;
+    [SerializeField] private float spawnSpreadZ = 3f;
+    
+    [Header("Spawn Events")]
+    [SerializeField] private Vector3[] spawnEvents; // x: time, y: normalEnemyCount, z: bigEnemyCount
+    
+    [Header("Visual Feedback")]
+    [SerializeField] private float spawnEffectDuration = 0.3f;
+    [SerializeField] private float spawnEffectStrength = 1.2f;
+    [SerializeField] private int spawnEffectVibrato = 4;
+    [SerializeField] private float spawnEffectElasticity = 1f;
+    
     private float spawnTimer;
+    private Vector3 originalScale;
+    private Tweener currentSpawnTween;
     
     private void Start()
     {
         spawnTimer = 0;
-
+        originalScale = transform.localScale;
     }
-
+    
     private void Update()
     {
-        if (health <= 0) { Destroy(gameObject); }
+        if (health <= 0)
+        { 
+            Destroy(gameObject);
+            return;
+        }
+        
         spawnTimer += Time.deltaTime;
-
+        
         for (int i = 0; i < spawnEvents.Length; i++)
         {
             if (spawnEvents[i].x == (int)spawnTimer)
             {
-                Spawn((int)spawnEvents[i].y, (int)spawnEvents[i].z);
+                SpawnWave((int)spawnEvents[i].y, (int)spawnEvents[i].z);
                 spawnEvents[i].x = 0;
             }
         }
+        
         healthText.text = health.ToString();
     }
-    private void Spawn(int EnemyAmount, int bigEnemyAmount)
+    
+    private void SpawnWave(int normalEnemyCount, int bigEnemyCount)
     {
-        for (int i = 0; i < EnemyAmount; i++)
+        // Spawn normal enemies
+        for (int i = 0; i < normalEnemyCount; i++)
         {
-            Vector3 newSpawnPoint = spawnPoint.position;
-            int spawnX = Random.Range(-2, 2);
-            int spawnZ = Random.Range(-3, 3);
-
-            newSpawnPoint.z += spawnZ;
-            newSpawnPoint.x += spawnX;
-            GameObject enemySpawned = Instantiate(enemy, newSpawnPoint, Quaternion.identity);
-            enemySpawned.transform.rotation = Quaternion.Euler(0, 180, 0);
+            SpawnEnemy(false);
         }
-        for (int y = 0; y < bigEnemyAmount; y++)
+        
+        // Spawn big enemies
+        for (int i = 0; i < bigEnemyCount; i++)
         {
-            Vector3 newSpawnPoint = spawnPoint.position;
-            int spawnX = Random.Range(-2, 2);
-            int spawnZ = Random.Range(-3, 3);
-
-            newSpawnPoint.z += spawnZ;
-            newSpawnPoint.x += spawnX;
-            GameObject enemySpawned = Instantiate(bigEnemy, newSpawnPoint, Quaternion.identity);
-            enemySpawned.transform.rotation = Quaternion.Euler(0, 180, 0);
+            SpawnEnemy(true);
+        }
+        
+        // Play spawn effect
+        PlaySpawnEffect();
+    }
+    
+    private void SpawnEnemy(bool isBig)
+    {
+        EnemyBehavior enemy = EnemyPool.Instance.GetEnemy();
+        if (enemy != null)
+        {
+            // Random position within spread range
+            Vector3 spawnPosition = spawnPoint.position;
+            spawnPosition.x += Random.Range(-spawnSpreadX, spawnSpreadX);
+            spawnPosition.z += Random.Range(-spawnSpreadZ, spawnSpreadZ);
+            
+            enemy.transform.position = spawnPosition;
+            enemy.transform.rotation = Quaternion.Euler(0, 180, 0);
+            
+            float speed = isBig ? bigEnemySpeed : normalEnemySpeed;
+            enemy.Initialize(speed, transform.position + Vector3.back * 10f);
+            
+            if (isBig)
+            {
+                enemy.transform.localScale = Vector3.one * 2f; // Make big enemies larger
+            }
         }
     }
+    
+    private void PlaySpawnEffect()
+    {
+        // Kill any existing spawn animation
+        if (currentSpawnTween != null && currentSpawnTween.IsPlaying())
+        {
+            currentSpawnTween.Kill();
+        }
+        
+        // Reset scale before starting new animation
+        transform.localScale = originalScale;
+        
+        // Create new punch scale animation
+        currentSpawnTween = transform.DOPunchScale(originalScale * (spawnEffectStrength - 1f), spawnEffectDuration, spawnEffectVibrato, spawnEffectElasticity)
+            .SetEase(Ease.OutElastic)
+            .OnComplete(() => transform.localScale = originalScale);
+    }
+    
     public void GetHit(int damage)
     {
         health -= damage;
         CastleHitEffect();
     }
-
+    
     private void CastleHitEffect()
     {
         castleParticular.Play();

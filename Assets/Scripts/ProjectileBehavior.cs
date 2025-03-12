@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 
 public class ProjectileBehavior : MonoBehaviour
@@ -38,29 +39,51 @@ public class ProjectileBehavior : MonoBehaviour
     
     void OnTriggerEnter(Collider other)
     {
-        // Check for crowd impact
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, explosionRadius);
-        foreach (var hitCollider in hitColliders)
+        bool shouldExplode = false;
+        
+        // Handle collision with enemies
+        if (other.CompareTag("Enemy"))
         {
-            if (hitCollider.CompareTag("Player"))
+            EnemyBehavior enemy = other.GetComponent<EnemyBehavior>();
+            if (enemy != null)
             {
-                
+                enemy.TakeDamage();
+                DestroyProjectile();
             }
+            shouldExplode = true;
         }
         
+        // Handle collision with enemy castle
         if (other.CompareTag("EnemyCastle"))
         {
             other.GetComponent<EnemyCastle>().GetHit(1);
+            shouldExplode = true;
         }
         
+        if (shouldExplode)
+        {
+            // Spawn explosion effect
+            if (explosionEffect != null)
+            {
+                Instantiate(explosionEffect, transform.position, Quaternion.identity);
+            }
+        }
+    }
+    
+    // Called by enemies to destroy the projectile when they collide
+    public void DestroyProjectile()
+    {
+        GetComponent<CapsuleCollider>().enabled = false;
+        // Play destruction animation
+        transform.DOScale(Vector3.zero, 0.2f).SetEase(Ease.InBack).OnComplete(() => {
+            ReturnToPool();
+        });
         
-        // Spawn explosion effect
+        // Spawn explosion effect immediately
         if (explosionEffect != null)
         {
             Instantiate(explosionEffect, transform.position, Quaternion.identity);
         }
-        
-        //ReturnToPool();
     }
     
     private void ReturnToPool()

@@ -73,6 +73,7 @@ public class ProjectilePool : MonoBehaviour
         }
         
         projectile = pool.Dequeue();
+        projectile.GetComponent<CapsuleCollider>().enabled = true;
         activeProjectiles.Add(projectile);
         projectile.gameObject.SetActive(true);
         return projectile;
