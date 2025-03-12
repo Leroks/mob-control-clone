@@ -14,32 +14,26 @@ public class CannonController : MonoBehaviour
     public float explosionRadius = 2f;
     public GameObject explosionEffectPrefab;
     
-    [Header("Wobble Settings")]
-    public float wobbleDuration = 0.3f;
-    public float wobbleStrength = 1.2f;
-    public int wobbleVibrato = 4;
-    public float wobbleElasticity = 1f;
-    
     private float nextFireTime;
     private bool isMouseHeld;
     private Camera mainCamera;
-    private Vector3 originalScale;
     private Tweener currentWobbleTween;
+    private WobbleEffect wobbleEffect;
     
-    void Start()
+    private void Start()
     {
         mainCamera = Camera.main;
-        originalScale = transform.localScale;
         DOTween.SetTweensCapacity(500, 50);
+        wobbleEffect = GetComponent<WobbleEffect>();
     }
     
-    void Update()
+    private void Update()
     {
         HandleMouseInput();
         FollowMouseX();
     }
     
-    void HandleMouseInput()
+    private void HandleMouseInput()
     {
         if (Input.GetMouseButtonDown(0))
         {
@@ -56,8 +50,8 @@ public class CannonController : MonoBehaviour
             nextFireTime = Time.time + fireRate;
         }
     }
-    
-    void FollowMouseX()
+
+    private void FollowMouseX()
     {
         Vector3 mousePos = Input.mousePosition;
         mousePos.z = mainCamera.WorldToScreenPoint(transform.position).z;
@@ -67,8 +61,8 @@ public class CannonController : MonoBehaviour
         newPosition.x = Mathf.Lerp(newPosition.x, worldPos.x, moveSpeed * Time.deltaTime);
         transform.position = newPosition;
     }
-    
-    void Fire()
+
+    private void Fire()
     {
         ProjectileBehavior projectile = ProjectilePool.Instance.GetProjectile();
         if (projectile != null)
@@ -77,25 +71,7 @@ public class CannonController : MonoBehaviour
             projectile.transform.rotation = Quaternion.identity;
             projectile.Initialize(crowdReductionAmount, explosionRadius, explosionEffectPrefab, projectileSpeed);
             
-            // Play wobble animation
-            PlayWobbleAnimation();
+            wobbleEffect.PlayWobbleAnimation();
         }
-    }
-    
-    void PlayWobbleAnimation()
-    {
-        // Kill any existing wobble animation
-        if (currentWobbleTween != null && currentWobbleTween.IsPlaying())
-        {
-            currentWobbleTween.Kill();
-        }
-        
-        // Reset scale before starting new animation
-        transform.localScale = originalScale;
-        
-        // Create new punch scale animation
-        currentWobbleTween = transform.DOPunchScale(originalScale * (wobbleStrength - 1f), wobbleDuration, wobbleVibrato, wobbleElasticity)
-            .SetEase(Ease.OutElastic)
-            .OnComplete(() => transform.localScale = originalScale);
     }
 }
