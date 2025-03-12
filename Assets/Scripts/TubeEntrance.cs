@@ -1,16 +1,12 @@
-using System;
 using UnityEngine;
-using DG.Tweening;
 
 public class TubeEntrance : MonoBehaviour
 {
     [Header("Teleport Settings")]
     [SerializeField] private TubeExit targetExit;
-    [SerializeField] private float teleportDuration = 0.3f;
     
     [Header("Visual Effects")]
     [SerializeField] private ParticleSystem entranceEffect;
-    [SerializeField] private Color teleportColor = Color.cyan;
     private WobbleEffect wobbleEffect;
 
     private void Start()
@@ -22,49 +18,45 @@ public class TubeEntrance : MonoBehaviour
     {
         if (other.CompareTag("Player") && targetExit != null)
         {
-            // Play wobble effect on entrance tube
-            if (wobbleEffect != null)
+            ProjectileBehavior projectile = other.GetComponent<ProjectileBehavior>();
+            if (projectile != null)
             {
-                wobbleEffect.PlayWobbleAnimation();
+                // Play wobble effect on entrance tube
+                if (wobbleEffect != null)
+                {
+                    wobbleEffect.PlayWobbleAnimation();
+                }
+
+                // Store projectile info before returning to pool
+                float speed = projectile.GetVelocity().magnitude;
+                
+                // Play entrance effect
+                if (entranceEffect != null)
+                {
+                    Instantiate(entranceEffect, other.transform.position, Quaternion.identity);
+                }
+
+                // Return to pool
+                ProjectilePool.Instance.ReturnProjectile(projectile);
+                
+                // Spawn at exit
+                ProjectileBehavior newProjectile = ProjectilePool.Instance.GetProjectile();
+                if (newProjectile != null)
+                {
+                    // Keep the same Y position, only change X and Z
+                    Vector3 exitPos = targetExit.transform.position;
+                    exitPos.y = other.transform.position.y;
+                    newProjectile.transform.position = exitPos;
+                    newProjectile.transform.forward = -targetExit.transform.up;
+                    newProjectile.Initialize(projectile.CrowdReductionAmount, 
+                                          projectile.ExplosionRadius, 
+                                          projectile.ExplosionEffectPrefab, 
+                                          speed);
+                    
+                    // Tell exit to play effects
+                    targetExit.PlayExitEffects();
+                }
             }
-            
-            TeleportObject(other.gameObject);
         }
-    }
-    
-    private void TeleportObject(GameObject obj)
-    {
-        // Store original scale
-        Vector3 originalScale = obj.transform.localScale;
-        
-        // Use default movement speed
-        float defaultSpeed = 5f;
-        
-        // Play entrance effect
-        if (entranceEffect != null)
-        {
-            Instantiate(entranceEffect, obj.transform.position, Quaternion.identity);
-        }
-        
-        // Sequence for smooth teleport animation
-        Sequence teleportSequence = DOTween.Sequence();
-        
-        // Shrink and spin at entrance
-        teleportSequence.Append(obj.transform.DOScale(Vector3.zero, teleportDuration / 2)
-            .SetEase(Ease.InBack));
-        teleportSequence.Join(obj.transform.DORotate(new Vector3(0, 360, 0), teleportDuration / 2, RotateMode.LocalAxisAdd)
-            .SetEase(Ease.InCubic));
-        
-        // Move to exit point (instantly, while invisible)
-        teleportSequence.AppendCallback(() => {
-            // Position at exit
-            obj.transform.position = targetExit.transform.position;
-            
-            // Align with exit direction
-            obj.transform.forward = -targetExit.transform.up;
-            
-            // Tell exit to play effects and set movement
-            targetExit.PlayExitEffects(obj, originalScale, defaultSpeed);
-        });
-    }
+}
 }

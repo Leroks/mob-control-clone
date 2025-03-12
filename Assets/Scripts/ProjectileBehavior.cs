@@ -9,6 +9,16 @@ public class ProjectileBehavior : MonoBehaviour
     private float moveSpeed;
     private float lifetime = 12f;
     private float currentLifetime;
+
+    // Properties for teleportation
+    public int CrowdReductionAmount => damageAmount;
+    public float ExplosionRadius => explosionRadius;
+    public GameObject ExplosionEffectPrefab => explosionEffect;
+
+    public Vector3 GetVelocity()
+    {
+        return transform.forward * moveSpeed;
+    }
     
     public void Initialize(int damage, float radius, GameObject effectPrefab, float speed)
     {
@@ -58,6 +68,7 @@ public class ProjectileBehavior : MonoBehaviour
         {
             other.GetComponent<EnemyCastle>().GetHit(1);
             shouldExplode = true;
+            ReturnToPool();
         }
         
         if (shouldExplode)

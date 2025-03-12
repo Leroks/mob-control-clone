@@ -1,6 +1,4 @@
-using System;
 using UnityEngine;
-using DG.Tweening;
 
 public class TubeExit : MonoBehaviour
 {
@@ -13,12 +11,12 @@ public class TubeExit : MonoBehaviour
        wobbleEffect = GetComponent<WobbleEffect>();
     }
 
-    public void PlayExitEffects(GameObject obj, Vector3 originalScale, float speed)
+    public void PlayExitEffects()
     {
         // Play exit particle effect
         if (exitEffect != null)
         {
-            Instantiate(exitEffect, obj.transform.position, Quaternion.identity);
+            Instantiate(exitEffect, transform.position, Quaternion.identity);
         }
         
         // Play wobble effect on exit tube
@@ -26,12 +24,5 @@ public class TubeExit : MonoBehaviour
         {
             wobbleEffect.PlayWobbleAnimation();
         }
-        
-        // Grow at exit with a pop effect
-        Sequence exitSequence = DOTween.Sequence();
-        exitSequence.Append(obj.transform.DOScale(originalScale * 1.2f, 0.15f)
-            .SetEase(Ease.OutQuad));
-        exitSequence.Append(obj.transform.DOScale(originalScale, 0.15f)
-            .SetEase(Ease.InOutQuad));
     }
 }
