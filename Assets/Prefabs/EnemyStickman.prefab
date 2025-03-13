@@ -73,6 +73,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0bf003a2b574b1b46986af83df5bb5e6, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1760802239475147704}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0bf003a2b574b1b46986af83df5bb5e6, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -7052399038080877640}
   m_SourcePrefab: {fileID: 100100000, guid: 0bf003a2b574b1b46986af83df5bb5e6, type: 3}
 --- !u!1 &227760923134555807 stripped
 GameObject:
@@ -150,3 +153,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 4
   m_CollisionDetection: 1
+--- !u!114 &-7052399038080877640
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 227760923134555807}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9487895c37974418b59b4ad6e0e2736, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 1
+  dissolveTexture: {fileID: 2800000, guid: af5515bfe14f1af4a9b8b3bf306b9261, type: 3}
+  dissolveColor: {r: 1, g: 1, b: 1, a: 1}
+  dissolveTime: 1
