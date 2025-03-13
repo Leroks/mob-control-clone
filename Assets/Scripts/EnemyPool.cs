@@ -11,8 +11,8 @@ public class EnemyPool : MonoBehaviour
     
     private Queue<EnemyBehavior> pool;
     private List<EnemyBehavior> activeEnemies;
-    
-    void Awake()
+
+    private void Awake()
     {
         if (Instance == null)
         {
@@ -24,8 +24,8 @@ public class EnemyPool : MonoBehaviour
             Destroy(gameObject);
         }
     }
-    
-    void Initialize()
+
+    private void Initialize()
     {
         pool = new Queue<EnemyBehavior>();
         activeEnemies = new List<EnemyBehavior>();
@@ -36,8 +36,8 @@ public class EnemyPool : MonoBehaviour
             CreateNewEnemy();
         }
     }
-    
-    void CreateNewEnemy()
+
+    private void CreateNewEnemy()
     {
         GameObject obj = Instantiate(enemyPrefab, Vector3.zero, Quaternion.identity, transform);
         EnemyBehavior enemy = obj.GetComponent<EnemyBehavior>();
@@ -58,7 +58,7 @@ public class EnemyPool : MonoBehaviour
         }
         
         EnemyBehavior enemy = pool.Dequeue();
-        enemy.transform.localScale = Vector3.one; // Reset scale for normal enemies (will be adjusted for big enemies in Initialize)
+        enemy.transform.localScale = Vector3.one;
         enemy.GetComponent<CapsuleCollider>().enabled = true;
         activeEnemies.Add(enemy);
         enemy.gameObject.SetActive(true);

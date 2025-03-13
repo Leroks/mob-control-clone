@@ -40,6 +40,7 @@ public class EnemyCastle : MonoBehaviour
         if (health <= 0)
         { 
             Destroy(gameObject);
+            GameManager.Instance.WinGame();
             return;
         }
         
@@ -117,6 +118,7 @@ public class EnemyCastle : MonoBehaviour
     
     public void GetHit(int damage)
     {
+        if(GameManager.Instance.IsGameOver) return;
         health -= damage;
         CastleHitEffect();
     }

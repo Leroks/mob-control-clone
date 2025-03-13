@@ -8,12 +8,11 @@ public class ProjectilePool : MonoBehaviour
     [Header("Pool Settings")]
     public GameObject projectilePrefab;
     public int poolSize = 20;
-    public bool expandable = false;
     
     private Queue<ProjectileBehavior> pool;
     private List<ProjectileBehavior> activeProjectiles;
-    
-    void Awake()
+
+    private void Awake()
     {
         if (Instance == null)
         {
@@ -25,8 +24,8 @@ public class ProjectilePool : MonoBehaviour
             Destroy(gameObject);
         }
     }
-    
-    void Initialize()
+
+    private void Initialize()
     {
         pool = new Queue<ProjectileBehavior>();
         activeProjectiles = new List<ProjectileBehavior>();
@@ -37,8 +36,8 @@ public class ProjectilePool : MonoBehaviour
             CreateNewProjectile();
         }
     }
-    
-    void CreateNewProjectile()
+
+    private void CreateNewProjectile()
     {
         GameObject obj = Instantiate(projectilePrefab, Vector3.zero, Quaternion.identity, transform);
         ProjectileBehavior projectile = obj.GetComponent<ProjectileBehavior>();
@@ -47,31 +46,18 @@ public class ProjectilePool : MonoBehaviour
             projectile = obj.AddComponent<ProjectileBehavior>();
         }
         
-        // Set up trigger collider
-        Collider collider = obj.GetComponent<Collider>();
-        if (collider != null)
-        {
-            collider.isTrigger = true;
-        }
-        
         obj.SetActive(false);
         pool.Enqueue(projectile);
     }
     
     public ProjectileBehavior GetProjectile()
     {
-        if (pool.Count == 0 && !expandable)
-        {
-            Debug.LogWarning("Projectile pool is empty and not expandable!");
-            return null;
-        }
-        
-        ProjectileBehavior projectile;
         if (pool.Count == 0)
         {
             CreateNewProjectile();
         }
         
+        ProjectileBehavior projectile;
         projectile = pool.Dequeue();
         projectile.transform.localScale = Vector3.one;
         projectile.GetComponent<CapsuleCollider>().enabled = true;
