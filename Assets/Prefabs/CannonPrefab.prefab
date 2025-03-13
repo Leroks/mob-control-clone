@@ -51,9 +51,6 @@ MonoBehaviour:
   projectileSpeed: 7
   fireRate: 0.2
   firePoint: {fileID: 1737231683180641293}
-  crowdReductionAmount: 5
-  explosionRadius: 2
-  explosionEffectPrefab: {fileID: 0}
   minX: -3.5
   maxX: 3.5
 --- !u!114 &1642098294174426450
