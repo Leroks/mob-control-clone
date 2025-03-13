@@ -8,7 +8,6 @@ public class Barricade : MonoBehaviour
     [Header("Barricade Settings")]
     [SerializeField] private int maxHealth = 3;
     [SerializeField] private TextMeshProUGUI healthText;
-    [SerializeField] private ParticleSystem hitEffect;
     
     [Header("Visual Feedback")]
     [SerializeField] private float hitShakeDuration = 0.2f;
@@ -23,14 +22,13 @@ public class Barricade : MonoBehaviour
     private int currentHealth;
     private Vector3 originalScale;
     private Tweener currentShakeTween;
-    
-    void Start()
+
+    private void Start()
     {
         currentHealth = maxHealth;
         originalScale = transform.localScale;
         UpdateHealthDisplay();
         
-        // Get the material
         Renderer renderer = GetComponent<Renderer>();
         if (renderer != null)
         {
@@ -38,8 +36,8 @@ public class Barricade : MonoBehaviour
             originalColor = material.color;
         }
     }
-    
-    void OnTriggerEnter(Collider other)
+
+    private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
@@ -75,13 +73,7 @@ public class Barricade : MonoBehaviour
     
     private void PlayHitEffect()
     {
-        // Play particle effect if available
-        if (hitEffect != null)
-        {
-            hitEffect.Play();
-        }
-        
-        // Play shake animation
+        // Shake
         if (currentShakeTween != null && currentShakeTween.IsPlaying())
         {
             currentShakeTween.Kill();
@@ -94,10 +86,8 @@ public class Barricade : MonoBehaviour
         // Flash effect
         if (material != null)
         {
-            // Kill any existing color animation
             DOTween.Kill(material);
             
-            // Animate to flash color and back
             material.DOColor(flashColor, flashDuration)
                 .SetEase(Ease.OutFlash)
                 .OnComplete(() => {
@@ -109,11 +99,6 @@ public class Barricade : MonoBehaviour
     
     private void DestroyBarricade()
     {
-        // Play destruction animation
-        transform.DOScale(Vector3.zero, 0.3f)
-            .SetEase(Ease.InBack)
-            .OnComplete(() => {
-                Destroy(gameObject);
-            });
+        transform.DOScale(Vector3.zero, 0.3f).SetEase(Ease.InBack).OnComplete(() => { Destroy(gameObject);});
     }
 }

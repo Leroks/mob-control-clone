@@ -753,16 +753,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   castleParticular: {fileID: 3297777609402300163}
   healthText: {fileID: 6224711496733761097}
-  health: 30
+  health: 50
   spawnPoint: {fileID: 6224711495860427659}
   normalEnemySpeed: 5
-  bigEnemySpeed: 3
   spawnSpreadX: 1.8
   spawnSpreadZ: 3
   spawnEvents:
-  - {x: 2, y: 50, z: 0}
-  - {x: 10, y: 30, z: 0}
-  - {x: 5, y: 20, z: 0}
+  - {x: 2, y: 50}
+  - {x: 10, y: 30}
+  - {x: 5, y: 20}
   spawnEffectDuration: 0.3
   spawnEffectStrength: 1.2
   spawnEffectVibrato: 4

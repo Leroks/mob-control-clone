@@ -48,16 +48,13 @@ public class GameManager : MonoBehaviour
     {
         animatedText.transform.gameObject.SetActive(true);
         Sequence sequence = DOTween.Sequence();
-
-        // Reset initial state
+        
         animatedText.transform.localScale = Vector3.zero;
         animatedText.alpha = 0;
-
-        // Pop up and fade in
+        
         sequence.Append(animatedText.transform.DOScale(scaleMultiplier, animationDuration).SetEase(Ease.OutBack));
         sequence.Join(animatedText.DOFade(1, animationDuration * 0.7f).SetEase(Ease.OutQuad));
-
-        // Slightly scale down to normal
+        
         sequence.Append(animatedText.transform.DOScale(1f, animationDuration * 0.3f).SetEase(Ease.OutQuad));
     }
 }

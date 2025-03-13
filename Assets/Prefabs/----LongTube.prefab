@@ -1062,7 +1062,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdb17ee25323e41f388ac8a5d635c30f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  exitEffect: {fileID: 0}
 --- !u!114 &648554220432318983
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1476,9 +1475,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetExit: {fileID: 5638554461678970303}
-  teleportDuration: 0.3
-  entranceEffect: {fileID: 0}
-  teleportColor: {r: 0, g: 1, b: 1, a: 1}
+  teleportDelay: 3
 --- !u!114 &7125750565010820617
 MonoBehaviour:
   m_ObjectHideFlags: 0

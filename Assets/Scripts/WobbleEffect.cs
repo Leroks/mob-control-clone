@@ -19,14 +19,12 @@ public class WobbleEffect : MonoBehaviour
     
     public void PlayWobbleAnimation()
     {
-        // Kill any existing wobble animation
         if (currentWobbleTween != null && currentWobbleTween.IsPlaying())
         {
             currentWobbleTween.Kill();
             transform.localScale = originalScale;
         }
         
-        // Create new punch scale animation
         currentWobbleTween = transform.DOPunchScale(originalScale * (wobbleStrength - 1f), wobbleDuration, wobbleVibrato, wobbleElasticity)
             .SetEase(Ease.OutElastic)
             .OnComplete(() => transform.localScale = originalScale);

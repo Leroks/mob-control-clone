@@ -8,7 +8,6 @@ public class TubeEntrance : MonoBehaviour
     [SerializeField] private float teleportDelay = 1.0f;
     
     [Header("Visual Effects")]
-    [SerializeField] private ParticleSystem entranceEffect;
     private WobbleEffect wobbleEffect;
 
     private void Start()
@@ -23,27 +22,18 @@ public class TubeEntrance : MonoBehaviour
             ProjectileBehavior projectile = other.GetComponent<ProjectileBehavior>();
             if (projectile != null)
             {
-                // Play wobble effect on entrance tube
                 if (wobbleEffect != null)
                 {
                     wobbleEffect.PlayWobbleAnimation();
                 }
-
-                // Store projectile info before returning to pool
+                
                 float speed = projectile.GetVelocity().magnitude;
                 
-                // Play entrance effect
-                if (entranceEffect != null)
-                {
-                    Instantiate(entranceEffect, other.transform.position, Quaternion.identity);
-                }
                 
                 float yPosition = other.transform.position.y;
                 
-                // Return to pool
                 ProjectilePool.Instance.ReturnProjectile(projectile);
                 
-                // Start the delayed spawn coroutine
                 StartCoroutine(DelayedSpawn(speed, yPosition));
             }
         }
@@ -51,21 +41,19 @@ public class TubeEntrance : MonoBehaviour
     
     private IEnumerator DelayedSpawn(float speed, float yPosition)
     {
-        // Wait for the delay
         yield return new WaitForSeconds(teleportDelay);
         
         // Spawn at exit
         ProjectileBehavior newProjectile = ProjectilePool.Instance.GetProjectile();
         if (newProjectile != null)
         {
-            // Keep the same Y position, only change X and Z
+            // Keep the same Y
             Vector3 exitPos = targetExit.transform.position;
             exitPos.y = yPosition;
             newProjectile.transform.position = exitPos;
             newProjectile.transform.forward = -targetExit.transform.up;
             newProjectile.Initialize(speed);
             
-            // Tell exit to play effects
             targetExit.PlayExitEffects();
         }
     }
