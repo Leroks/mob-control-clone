@@ -25,6 +25,12 @@ public class EnemyCastle : MonoBehaviour
     [SerializeField] private int spawnEffectVibrato = 4;
     [SerializeField] private float spawnEffectElasticity = 1f;
     
+    [Header("Hit Effect")]
+    [SerializeField] private float hitShakeDuration = 0.2f;
+    [SerializeField] private float hitShakeStrength = 0.3f;
+    [SerializeField] private int hitShakeVibrato = 10;
+    [SerializeField] private float hitShakeRandomness = 45f;
+    
     private float spawnTimer;
     private Vector3 originalScale;
     private Tweener currentSpawnTween;
@@ -94,7 +100,7 @@ public class EnemyCastle : MonoBehaviour
             
             if (isBig)
             {
-                enemy.transform.localScale = Vector3.one * 2f; // Make big enemies larger
+                enemy.transform.localScale = Vector3.one * 2f;
             }
         }
     }
@@ -125,6 +131,10 @@ public class EnemyCastle : MonoBehaviour
     
     private void CastleHitEffect()
     {
+        // Play particle effect
         castleParticular.Play();
+        
+        // Shake the castle
+        transform.DOShakePosition(hitShakeDuration, hitShakeStrength, hitShakeVibrato, hitShakeRandomness, false, true).SetEase(Ease.OutQuad);
     }
 }

@@ -767,6 +767,10 @@ MonoBehaviour:
   spawnEffectStrength: 1.2
   spawnEffectVibrato: 4
   spawnEffectElasticity: 1
+  hitShakeDuration: 0.2
+  hitShakeStrength: 0.3
+  hitShakeVibrato: 10
+  hitShakeRandomness: 45
 --- !u!65 &6224711496802093026
 BoxCollider:
   m_ObjectHideFlags: 0
