@@ -73,7 +73,7 @@ public class ProjectilePool : MonoBehaviour
         }
         
         projectile = pool.Dequeue();
-        projectile.transform.localScale = Vector3.one; // Reset scale
+        projectile.transform.localScale = Vector3.one;
         projectile.GetComponent<CapsuleCollider>().enabled = true;
         activeProjectiles.Add(projectile);
         projectile.gameObject.SetActive(true);

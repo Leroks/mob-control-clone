@@ -34,12 +34,14 @@ public class Door : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            Debug.Log("Player entered the door");
-            GameObject player = other.gameObject;
-            
+            ProjectileBehavior originalProjectile = other.GetComponent<ProjectileBehavior>();
+            if (originalProjectile != null)
+            {
+                float speed = originalProjectile.GetVelocity().magnitude;
+                
                 for(int i = 0; i < multiplierAmount-1; i++)
                 {
-                    Vector3 newSpawnPoint = player.transform.position;
+                    Vector3 newSpawnPoint = other.transform.position;
                     float spawnX = Random.Range(-0.9f, 0.9f);
                     float spawnZ = Random.Range(1, 2);
                     newSpawnPoint.x += spawnX;
@@ -47,9 +49,10 @@ public class Door : MonoBehaviour
 
                     ProjectileBehavior projectile = ProjectilePool.Instance.GetProjectile();
                     projectile.transform.position = newSpawnPoint;
-                    projectile.Initialize(5f);
+                    projectile.transform.forward = Vector3.forward;
+                    projectile.Initialize(speed);
                 }
-            
+            }
         }
     }
 }
