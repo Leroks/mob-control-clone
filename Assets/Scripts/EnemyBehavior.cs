@@ -11,7 +11,7 @@ public class EnemyBehavior : MonoBehaviour
     private Vector3 targetPosition;
     private bool isActive;
     private Vector3 originalScale;
-    private Material originalMaterial;
+    private Shader originalShader;
     
     public void Initialize(float speed, Vector3 target)
     {
@@ -20,15 +20,13 @@ public class EnemyBehavior : MonoBehaviour
         isActive = true;
         health = 1;
         originalScale = transform.localScale;
+        dissolveProgress = 0.3f;
         
-        // Store original material
-        if (originalMaterial == null)
+        // Store original shader
+        if (originalShader == null)
         {
             Renderer renderer = transform.GetChild(1).GetComponent<Renderer>();
-            if (renderer != null)
-            {
-                originalMaterial = renderer.material;
-            }
+            originalShader = renderer.sharedMaterial.shader;
         }
         
         // Reset to original material
@@ -69,9 +67,9 @@ public class EnemyBehavior : MonoBehaviour
     private void ResetMaterial()
     {
         Renderer renderer = transform.GetChild(1).GetComponent<Renderer>();
-        if (renderer != null && originalMaterial != null)
+        if (renderer != null && originalShader != null)
         {
-            renderer.material = originalMaterial;
+            renderer.sharedMaterial.shader = originalShader;
         }
     }
     
@@ -86,8 +84,8 @@ public class EnemyBehavior : MonoBehaviour
     }
     
     public Texture2D dissolveTexture;
-    public Color dissolveColor = Color.red;
-    public float dissolveTime = 2f;
+    public Color dissolveColor = Color.white;
+    public float dissolveTime = 1f;
 
     private Material material;
     private float dissolveProgress = 0.3f;
