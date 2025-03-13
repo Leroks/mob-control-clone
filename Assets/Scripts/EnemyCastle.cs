@@ -12,12 +12,11 @@ public class EnemyCastle : MonoBehaviour
     [Header("Spawn Settings")]
     [SerializeField] private Transform spawnPoint;
     [SerializeField] private float normalEnemySpeed = 5f;
-    [SerializeField] private float bigEnemySpeed = 3f;
     [SerializeField] private float spawnSpreadX = 2f;
     [SerializeField] private float spawnSpreadZ = 3f;
     
     [Header("Spawn Events")]
-    [SerializeField] private Vector3[] spawnEvents; // x: time, y: normalEnemyCount, z: bigEnemyCount
+    [SerializeField] private Vector2[] spawnEvents; // x: time, y: normalEnemyCount
     
     [Header("Visual Feedback")]
     [SerializeField] private float spawnEffectDuration = 0.3f;
@@ -26,9 +25,9 @@ public class EnemyCastle : MonoBehaviour
     [SerializeField] private float spawnEffectElasticity = 1f;
     
     [Header("Hit Effect")]
-    [SerializeField] private float hitShakeDuration = 0.2f;
-    [SerializeField] private float hitShakeStrength = 0.3f;
-    [SerializeField] private int hitShakeVibrato = 10;
+    [SerializeField] private float hitShakeDuration = 0.15f;
+    [SerializeField] private float hitShakeStrength = 0.2f;
+    [SerializeField] private int hitShakeVibrato = 8;
     [SerializeField] private float hitShakeRandomness = 45f;
     
     private float spawnTimer;
@@ -56,7 +55,7 @@ public class EnemyCastle : MonoBehaviour
         {
             if (spawnEvents[i].x == (int)spawnTimer)
             {
-                SpawnWave((int)spawnEvents[i].y, (int)spawnEvents[i].z);
+                SpawnWave((int)spawnEvents[i].y);
                 spawnEvents[i].x = 0;
             }
         }
@@ -64,30 +63,21 @@ public class EnemyCastle : MonoBehaviour
         healthText.text = health.ToString();
     }
     
-    private void SpawnWave(int normalEnemyCount, int bigEnemyCount)
+    private void SpawnWave(int normalEnemyCount)
     {
-        // Spawn normal enemies
         for (int i = 0; i < normalEnemyCount; i++)
         {
-            SpawnEnemy(false);
+            SpawnEnemy();
         }
         
-        // Spawn big enemies
-        for (int i = 0; i < bigEnemyCount; i++)
-        {
-            SpawnEnemy(true);
-        }
-        
-        // Play spawn effect
         PlaySpawnEffect();
     }
     
-    private void SpawnEnemy(bool isBig)
+    private void SpawnEnemy()
     {
         EnemyBehavior enemy = EnemyPool.Instance.GetEnemy();
         if (enemy != null)
         {
-            // Random position within spread range
             Vector3 spawnPosition = spawnPoint.position;
             spawnPosition.x += Random.Range(-spawnSpreadX, spawnSpreadX);
             spawnPosition.z += Random.Range(-spawnSpreadZ, spawnSpreadZ);
@@ -95,28 +85,20 @@ public class EnemyCastle : MonoBehaviour
             enemy.transform.position = spawnPosition;
             enemy.transform.rotation = Quaternion.Euler(0, 180, 0);
             
-            float speed = isBig ? bigEnemySpeed : normalEnemySpeed;
+            float speed = normalEnemySpeed;
             enemy.Initialize(speed, transform.position + Vector3.back * 10f);
-            
-            if (isBig)
-            {
-                enemy.transform.localScale = Vector3.one * 2f;
-            }
         }
     }
     
     private void PlaySpawnEffect()
     {
-        // Kill any existing spawn animation
         if (currentSpawnTween != null && currentSpawnTween.IsPlaying())
         {
             currentSpawnTween.Kill();
         }
         
-        // Reset scale before starting new animation
         transform.localScale = originalScale;
         
-        // Create new punch scale animation
         currentSpawnTween = transform.DOPunchScale(originalScale * (spawnEffectStrength - 1f), spawnEffectDuration, spawnEffectVibrato, spawnEffectElasticity)
             .SetEase(Ease.OutElastic)
             .OnComplete(() => transform.localScale = originalScale);
@@ -131,10 +113,12 @@ public class EnemyCastle : MonoBehaviour
     
     private void CastleHitEffect()
     {
-        // Play particle effect
         castleParticular.Play();
         
-        // Shake the castle
-        transform.DOShakePosition(hitShakeDuration, hitShakeStrength, hitShakeVibrato, hitShakeRandomness, false, true).SetEase(Ease.OutQuad);
+        Quaternion originalRotation = transform.localRotation;
+        
+        transform.DOShakeRotation(hitShakeDuration, hitShakeStrength * 15f, hitShakeVibrato, hitShakeRandomness)
+            .SetEase(Ease.OutQuad)
+            .OnComplete(() => transform.localRotation = originalRotation);
     }
 }

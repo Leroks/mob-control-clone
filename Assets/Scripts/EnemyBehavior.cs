@@ -22,17 +22,14 @@ public class EnemyBehavior : MonoBehaviour
         originalScale = transform.localScale;
         dissolveProgress = 0.3f;
         
-        // Store original shader
         if (originalShader == null)
         {
             Renderer renderer = transform.GetChild(1).GetComponent<Renderer>();
             originalShader = renderer.sharedMaterial.shader;
         }
         
-        // Reset to original material
         ResetMaterial();
         
-        // Spawn animation
         transform.localScale = Vector3.zero;
         transform.DOScale(originalScale, 0.3f).SetEase(Ease.OutBack);
     }
@@ -45,7 +42,6 @@ public class EnemyBehavior : MonoBehaviour
         transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime);
     }
     
-    // Called by projectiles when hit
     public void TakeDamage()
     {
         if (!isActive) return;
